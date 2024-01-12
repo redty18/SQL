@@ -1,0 +1,551 @@
+Last login: Thu Jan 11 21:10:12 on ttys084
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+Adits-MacBook-Pro:~ aditpathania$ mysql -V
+mysql  Ver 8.2.0 for macos13 on arm64 (MySQL Community Server - GPL)
+Adits-MacBook-Pro:~ aditpathania$ mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 23
+Server version: 8.2.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.02 sec)
+
+mysql> CREATE DATABASES Student
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DATABASES Student' at line 1
+mysql> CREATE DATABASES Student;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DATABASES Student' at line 1
+mysql> create databases student;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'databases student' at line 1
+mysql> CREATE DATABASE Student;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| Student            |
+| sys                |
++--------------------+
+5 rows in set (0.02 sec)
+
+mysql> USE Student;
+Database changed
+mysql> SELECT * FROM Student;
+ERROR 1146 (42S02): Table 'student.student' doesn't exist
+mysql> CREATE TABLE student(
+    ->     column1 datatype,
+    ->     column2 datatype,
+    ->     column3 datatype
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> 
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'datatype,
+    column2 datatype,
+    column3 datatype' at line 2
+mysql> CREATE TABLE students(
+    ->     student_id INT PRIMARY KEY,
+    ->     first_name VARCHAR(50),
+    ->     last_name VARCHAR(50),
+    ->     rollNo DECIMAL(10, 2)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> CLEAR
+mysql> CLEAN
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CLEAN' at line 1
+mysql> CLEAR;
+mysql> CLEAN;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CLEAN' at line 1
+mysql> cl scr
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'cl scr' at line 1
+mysql> cl scr;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'cl scr' at line 1
+mysql> SELECT * FROM students
+    -> ;
+Empty set (0.01 sec)
+
+mysql> SELECT * FROM students;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO students VALUES
+    ->     (1, 'Alice', 'Smith', 101),
+    ->     (2, 'Bob', 'Johnson', 102),
+    ->     (3, 'Charlie', 'Brown', 103);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM students;
++------------+------------+-----------+--------+
+| student_id | first_name | last_name | rollNo |
++------------+------------+-----------+--------+
+|          1 | Alice      | Smith     | 101.00 |
+|          2 | Bob        | Johnson   | 102.00 |
+|          3 | Charlie    | Brown     | 103.00 |
++------------+------------+-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO students VALUES
+    -> (4, 'Adit', 'Pathania', 104),
+    -> (5, 'Anna', 'Hawk', 105);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM students;
++------------+------------+-----------+--------+
+| student_id | first_name | last_name | rollNo |
++------------+------------+-----------+--------+
+|          1 | Alice      | Smith     | 101.00 |
+|          2 | Bob        | Johnson   | 102.00 |
+|          3 | Charlie    | Brown     | 103.00 |
+|          4 | Adit       | Pathania  | 104.00 |
+|          5 | Anna       | Hawk      | 105.00 |
++------------+------------+-----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO students VALUES (4, 'Adit', 'Pathania', 104);
+ERROR 1062 (23000): Duplicate entry '4' for key 'students.PRIMARY'
+mysql> UPDATE students
+    -> SET rollNo = 106
+    -> WHERE student_id = 5;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM students;
++------------+------------+-----------+--------+
+| student_id | first_name | last_name | rollNo |
++------------+------------+-----------+--------+
+|          1 | Alice      | Smith     | 101.00 |
+|          2 | Bob        | Johnson   | 102.00 |
+|          3 | Charlie    | Brown     | 103.00 |
+|          4 | Adit       | Pathania  | 104.00 |
+|          5 | Anna       | Hawk      | 106.00 |
++------------+------------+-----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> DELETE students WHERE student_id = 5;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE student_id = 5' at line 1
+mysql> DELETE FROM students WHERE student_id = 5;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM students;
++------------+------------+-----------+--------+
+| student_id | first_name | last_name | rollNo |
++------------+------------+-----------+--------+
+|          1 | Alice      | Smith     | 101.00 |
+|          2 | Bob        | Johnson   | 102.00 |
+|          3 | Charlie    | Brown     | 103.00 |
+|          4 | Adit       | Pathania  | 104.00 |
++------------+------------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT first_name, rollNo FROM students;
++------------+--------+
+| first_name | rollNo |
++------------+--------+
+| Alice      | 101.00 |
+| Bob        | 102.00 |
+| Charlie    | 103.00 |
+| Adit       | 104.00 |
++------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO students VALUES
+    -> (5, 'Alice', 'Hawk', 105);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT first_name, rollNo FROM students;
++------------+--------+
+| first_name | rollNo |
++------------+--------+
+| Alice      | 101.00 |
+| Bob        | 102.00 |
+| Charlie    | 103.00 |
+| Adit       | 104.00 |
+| Alice      | 105.00 |
++------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT first_name = Alice FROM students;
+ERROR 1054 (42S22): Unknown column 'Alice' in 'field list'
+mysql> SELECT * FROM students WHERE first_name = 'Alice';
++------------+------------+-----------+--------+
+| student_id | first_name | last_name | rollNo |
++------------+------------+-----------+--------+
+|          1 | Alice      | Smith     | 101.00 |
+|          5 | Alice      | Hawk      | 105.00 |
++------------+------------+-----------+--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT fist_name, last_name FROM students WHERE first_name = 'Alice';
+ERROR 1054 (42S22): Unknown column 'fist_name' in 'field list'
+mysql> SELECT first_name, last_name FROM students WHERE first_name = 'Alice';
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| Alice      | Smith     |
+| Alice      | Hawk      |
++------------+-----------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT first_name, last_name FROM students WHERE first_name = 'Alice and
+last_name = 'Smith';
+    '> 
+    '> ;
+    '> 
+    '> 
+    '> 
+    '> 
+    '> 
+    '> SATOP
+    '> STOP
+    '> EXIT
+    '> EXIT;
+    '> INSERT INTO students VALUES
+    '>     (1, 'Alice', 'Smith', 101),
+    '>     (2, 'Bob', 'Johnson', 102),
+    '>     (3, 'Charlie', 'Brown', 103);
+    '> 
+    '> 
+    '> 
+    '> 
+    '> 
+    '> 
+    '> 
+    '> 
+    '> 
+    '> ^C
+mysql> ^C
+mysql> SELECT first_name, last_name FROM students 
+    -> ;
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| Alice      | Smith     |
+| Bob        | Johnson   |
+| Charlie    | Brown     |
+| Adit       | Pathania  |
+| Alice      | Hawk      |
++------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT first_name, last_name FROM students WHERE first_name = 'Alice' andlast_name = 'Smith';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'andlast_name = 'Smith'' at line 1
+mysql> SELECT first_name, last_name FROM students WHERE first_name = 'Alice', last_name = 'Smith';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', last_name = 'Smith'' at line 1
+mysql> SELECT first_name, last_name FROM students WHERE first_name = 'Alice'
+    -> AND last_name = 'Smith';
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| Alice      | Smith     |
++------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT first_name, last_name FROM students WHERE first_name = 'Alice' AND last_name = 'Smith';
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| Alice      | Smith     |
++------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM students
+    -> ;
++------------+------------+-----------+--------+
+| student_id | first_name | last_name | rollNo |
++------------+------------+-----------+--------+
+|          1 | Alice      | Smith     | 101.00 |
+|          2 | Bob        | Johnson   | 102.00 |
+|          3 | Charlie    | Brown     | 103.00 |
+|          4 | Adit       | Pathania  | 104.00 |
+|          5 | Alice      | Hawk      | 105.00 |
++------------+------------+-----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT AVG(rollNo) FROM students
+    -> ;
++-------------+
+| AVG(rollNo) |
++-------------+
+|  103.000000 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT AVG(rollNO) as Average FROM students
+    -> ;
++------------+
+| Average    |
++------------+
+| 103.000000 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> COUNT first_name = 'Alice" FROM students;
+    '> 
+    '> ^C
+mysql> SELECT first_name FROM students
+    -> COUNT 'Alice'
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''Alice'' at line 2
+mysql> SELECT COUNT(*) AS alice_count
+    -> FROM students
+    -> WHERE first_name = 'Alice';
++-------------+
+| alice_count |
++-------------+
+|           2 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> EXIT;
+Bye
+Adits-MacBook-Pro:~ aditpathania$ mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 24
+Server version: 8.2.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| Student            |
+| sys                |
++--------------------+
+5 rows in set (0.04 sec)
+
+mysql> CREATE DATABASE library;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| library            |
+| mysql              |
+| performance_schema |
+| Student            |
+| sys                |
++--------------------+
+6 rows in set (0.01 sec)
+
+mysql> CREATE TABLE books(
+    -> book_id INT PRIMARY KEY,
+    -> title VARCHAR(49)
+    -> ,author VARCHAR(50)
+    -> ,available BOOLEAN
+    -> );
+ERROR 1046 (3D000): No database selected
+mysql> USE library
+Database changed
+mysql> CREATE TABLE books( book_id INT PRIMARY KEY, title VARCHAR(49) ,author VARCHAR(50) ,available BOOLEAN );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> SELECT * FROM library
+    -> ;
+ERROR 1146 (42S02): Table 'library.library' doesn't exist
+mysql> INSERT INTO library VALUES
+    -> (1, 'The Great Gatsby', 'F. Scott Fitzgerald', True),
+    -> ^C
+mysql> INSERT INTO library VALUES
+    -> (1, 'The Great Gatsby', 'F. Scott Fitzgerald', true),
+    -> (3, '1984', 'George Orwell', false),
+    -> (2, 'To Kill a MockingBird', 'Harper Lee', true),
+    -> (4, 'Pride and Prejudice', 'Jane Austen', true),
+    -> (5, 'The Catcher in the Rye', 'J.D. Salinger', false);
+ERROR 1146 (42S02): Table 'library.library' doesn't exist
+mysql> INSERT INTO books VALUES (1, 'The Great Gatsby', 'F. Scott Fitzgerald', true), (3, '1984', 'George Orwell', false), (2, 'To Kill a MockingBird', 'Harper
+Lee'                                                                           in the Rye', 'J.D. Salinger', false);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM books
+    -> ;
++---------+------------------------+---------------------+-----------+
+| book_id | title                  | author              | available |
++---------+------------------------+---------------------+-----------+
+|       1 | The Great Gatsby       | F. Scott Fitzgerald |         1 |
+|       2 | To Kill a MockingBird  | Harper Lee          |         1 |
+|       3 | 1984                   | George Orwell       |         0 |
+|       4 | Pride and Prejudice    | Jane Austen         |         1 |
+|       5 | The Catcher in the Rye | J.D. Salinger       |         0 |
++---------+------------------------+---------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(*) as uniqueAuthor
+    -> FROM books
+    -> GROUP BY author;
++--------------+
+| uniqueAuthor |
++--------------+
+|            1 |
+|            1 |
+|            1 |
+|            1 |
+|            1 |
++--------------+
+5 rows in set (0.05 sec)
+
+mysql> SELECT author, COUNT(*) as uniqueAuthor
+    -> FROM books
+    -> grouo by author;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'by author' at line 3
+mysql> SELECT author, COUNT(*) as uniqueAuthor FROM books GROUP BY author;
++---------------------+--------------+
+| author              | uniqueAuthor |
++---------------------+--------------+
+| F. Scott Fitzgerald |            1 |
+| Harper Lee          |            1 |
+| George Orwell       |            1 |
+| Jane Austen         |            1 |
+| J.D. Salinger       |            1 |
++---------------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO books VALUES
+    -> (6, 'Random Book', 'Harper Lee', false);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> SELECT author, COUNT(*) as uniqueAuthor FROM books GROUP BY author;
++---------------------+--------------+
+| author              | uniqueAuthor |
++---------------------+--------------+
+| F. Scott Fitzgerald |            1 |
+| Harper Lee          |            2 |
+| George Orwell       |            1 |
+| Jane Austen         |            1 |
+| J.D. Salinger       |            1 |
++---------------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(*) as availableBooks
+    -> FROM books
+    -> WHERE true;
++----------------+
+| availableBooks |
++----------------+
+|              6 |
++----------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT COUNT(*) as availableBooks
+    -> FROM books
+    -> WHERE avaiable = true;
+ERROR 1054 (42S22): Unknown column 'avaiable' in 'where clause'
+mysql> SELECT COUNT(*) as availableBooks
+    -> FROM books
+    -> WHERE availa
+    -> ble = 1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ble = 1' at line 4
+mysql> SELECT COUNT(*) as availableBooks FROM books WHERE available = 1;
++----------------+
+| availableBooks |
++----------------+
+|              3 |
++----------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT AVG(available) FROM books;
++----------------+
+| AVG(available) |
++----------------+
+|         0.5000 |
++----------------+
+1 row in set (0.01 sec)
+
+mysql> UPDATE books
+    -> SET available = true
+    -> WHERE book_id = 3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM books
+    -> ;
++---------+------------------------+---------------------+-----------+
+| book_id | title                  | author              | available |
++---------+------------------------+---------------------+-----------+
+|       1 | The Great Gatsby       | F. Scott Fitzgerald |         1 |
+|       2 | To Kill a MockingBird  | Harper Lee          |         1 |
+|       3 | 1984                   | George Orwell       |         1 |
+|       4 | Pride and Prejudice    | Jane Austen         |         1 |
+|       5 | The Catcher in the Rye | J.D. Salinger       |         0 |
+|       6 | Random Book            | Harper Lee          |         0 |
++---------+------------------------+---------------------+-----------+
+6 rows in set (0.01 sec)
+
+mysql> DELETE FROM books WHERE book_id = 5;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM books;
++---------+-----------------------+---------------------+-----------+
+| book_id | title                 | author              | available |
++---------+-----------------------+---------------------+-----------+
+|       1 | The Great Gatsby      | F. Scott Fitzgerald |         1 |
+|       2 | To Kill a MockingBird | Harper Lee          |         1 |
+|       3 | 1984                  | George Orwell       |         1 |
+|       4 | Pride and Prejudice   | Jane Austen         |         1 |
+|       6 | Random Book           | Harper Lee          |         0 |
++---------+-----------------------+---------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT AVG(available) * 100 FROM books;
++----------------------+
+| AVG(available) * 100 |
++----------------------+
+|              80.0000 |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT AVG(available) * 100 as Average FROM books;
++---------+
+| Average |
++---------+
+| 80.0000 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> 
