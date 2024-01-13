@@ -1,0 +1,631 @@
+Last login: Fri Jan 12 09:22:20 on ttys105
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+Adits-MacBook-Pro:~ aditpathania$ mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 30
+Server version: 8.2.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| library            |
+| mysql              |
+| performance_schema |
+| Student            |
+| sys                |
++--------------------+
+6 rows in set (0.03 sec)
+
+mysql> CREATE DATABASE Employee;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> CREATE TABLE skills(
+    -> skill_id INT PRIMARY KEY
+    -> , skill_name VARCHAR(50);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+mysql> CREATE TABLE skills(
+    -> skill_id INT PRIMARY KEY,
+    -> skill_name VARCHAR(50)
+    -> );
+ERROR 1046 (3D000): No database selected
+mysql> USE Employee
+Database changed
+mysql> CREATE TABLE skills( skill_id INT PRIMARY KEY, skill_name VARCHAR(50) );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> SELECT * FROM skills
+    -> ^C
+mysql> INSERT INTO skills VALUES
+    -> (1, 'Java'),
+    -> (2, 'SQL'),
+    -> (3, 'Python');
+Query OK, 3 rows affected (0.04 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM skills
+    -> ;
++----------+------------+
+| skill_id | skill_name |
++----------+------------+
+|        1 | Java       |
+|        2 | SQL        |
+|        3 | Python     |
++----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> UPDATE employees SET skills = 'Java, SQL' WHERE employee_id = 1;
+ERROR 1146 (42S02): Table 'employee.employees' doesn't exist
+mysql> USE Employee
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> UPDATE employees SET skills = 'Java, SQL' WHERE skill_id = 1;
+ERROR 1146 (42S02): Table 'employee.employees' doesn't exist
+mysql> UPDATE Employee SET skills = 'Java, SQL' WHERE skill_id = 1;
+ERROR 1146 (42S02): Table 'employee.employee' doesn't exist
+mysql> UPDATE skills
+    -> SET skill_name = 'Java, HTML'
+    -> WHERE skill_id = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE skills
+    -> SET skill_name = 'SQL, React'
+    -> WHERE skill_id = 2;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM skills
+    -> ;
++----------+------------+
+| skill_id | skill_name |
++----------+------------+
+|        1 | Java, HTML |
+|        2 | SQL, React |
+|        3 | Python     |
++----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> UPDATE skills
+    -> SET skill_name = 'Java, HTML, Tailwind, GIT'
+    -> WHERE skill_id = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM skills
+    -> ;
++----------+---------------------------+
+| skill_id | skill_name                |
++----------+---------------------------+
+|        1 | Java, HTML, Tailwind, GIT |
+|        2 | SQL, React                |
+|        3 | Python                    |
++----------+---------------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT skill_name FROM skills WHERE skill_id = 1;
++---------------------------+
+| skill_name                |
++---------------------------+
+| Java, HTML, Tailwind, GIT |
++---------------------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT COUNT(*) as empJava
+    -> FROM skills
+    -> WHERE skill_name = 'Java'
+    -> ;
++---------+
+| empJava |
++---------+
+|       0 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(*) as empJAVA
+    -> FROM skills
+    -> GROUP BY skill_name
+    -> ;
++---------+
+| empJAVA |
++---------+
+|       1 |
+|       1 |
+|       1 |
++---------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO skills VALUES
+    -> (4, 'Java')
+    -> (5, 'Java');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(5, 'Java')' at line 3
+mysql> INSERT INTO skills VALUES (4, 'Java'), (5, 'Java');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM skills
+    -> ;
++----------+---------------------------+
+| skill_id | skill_name                |
++----------+---------------------------+
+|        1 | Java, HTML, Tailwind, GIT |
+|        2 | SQL, React                |
+|        3 | Python                    |
+|        4 | Java                      |
+|        5 | Java                      |
++----------+---------------------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(*) as empJava
+    -> FROM skills
+    -> WHERE skill_name = 'Java'
+    -> ;
++---------+
+| empJava |
++---------+
+|       2 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO skills VALUES
+    -> (6, '');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT skill_id FROM skills WHERE skill_name = '';
++----------+
+| skill_id |
++----------+
+|        6 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> DELETE FROM skills WHERE skill_id = 5;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM skills;
++----------+---------------------------+
+| skill_id | skill_name                |
++----------+---------------------------+
+|        1 | Java, HTML, Tailwind, GIT |
+|        2 | SQL, React                |
+|        3 | Python                    |
+|        4 | Java                      |
+|        6 |                           |
++----------+---------------------------+
+5 rows in set (0.00 sec)
+
+mysql> ALTER TABLE skills
+    -> ADD COLUMN skill_category VARCHAR(50);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM skills;
++----------+---------------------------+----------------+
+| skill_id | skill_name                | skill_category |
++----------+---------------------------+----------------+
+|        1 | Java, HTML, Tailwind, GIT | NULL           |
+|        2 | SQL, React                | NULL           |
+|        3 | Python                    | NULL           |
+|        4 | Java                      | NULL           |
+|        6 |                           | NULL           |
++----------+---------------------------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> UPDATE skills
+    -> SET skill_category = 'FrontEnd'
+    -> WHERE skill_id = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE skills
+    -> SET skill_category = 'BackEnd'
+    -> WHERE skill_id = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE skills
+    -> SET skill_category = 'FullStack'
+    -> WHERE skill_id = 2;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE skills SET skill_category = 'BackEnd' WHERE skill_id = 3;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE skills SET skill_category = 'BackEnd' WHERE skill_id = 4;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM skills;
++----------+---------------------------+----------------+
+| skill_id | skill_name                | skill_category |
++----------+---------------------------+----------------+
+|        1 | Java, HTML, Tailwind, GIT | FrontEnd       |
+|        2 | SQL, React                | FullStack      |
+|        3 | Python                    | BackEnd        |
+|        4 | Java                      | BackEnd        |
+|        6 |                           | NULL           |
++----------+---------------------------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> ALTER TABLE skills
+    -> ADD COLUMN employee_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+mysql> ALTER TABLE skills
+    -> ADD COLUMN employee_name VARCHAR(50);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM skills;
++----------+---------------------------+----------------+---------------+
+| skill_id | skill_name                | skill_category | employee_name |
++----------+---------------------------+----------------+---------------+
+|        1 | Java, HTML, Tailwind, GIT | FrontEnd       | NULL          |
+|        2 | SQL, React                | FullStack      | NULL          |
+|        3 | Python                    | BackEnd        | NULL          |
+|        4 | Java                      | BackEnd        | NULL          |
+|        6 |                           | NULL           | NULL          |
++----------+---------------------------+----------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> ALTER TABLE skills
+    -> DELETE employee_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELETE employee_name' at line 2
+mysql> ALTER TABLE skills
+    -> DELETE COLUMN employee_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELETE COLUMN employee_name' at line 2
+mysql> ALTER TABLE skills DROP COLUMN employee_name;
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM skills;
++----------+---------------------------+----------------+
+| skill_id | skill_name                | skill_category |
++----------+---------------------------+----------------+
+|        1 | Java, HTML, Tailwind, GIT | FrontEnd       |
+|        2 | SQL, React                | FullStack      |
+|        3 | Python                    | BackEnd        |
+|        4 | Java                      | BackEnd        |
+|        6 |                           | NULL           |
++----------+---------------------------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT skill_id WHERE skill_category = 'BackEnd';
+ERROR 1054 (42S22): Unknown column 'skill_id' in 'field list'
+mysql> SELECT skill_id FROM skills  WHERE skill_category = 'BackEnd';
++----------+
+| skill_id |
++----------+
+|        3 |
+|        4 |
++----------+
+2 rows in set (0.01 sec)
+
+mysql> DROP TABLE skills;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> SHOW TABLES;
+Empty set (0.02 sec)
+
+mysql> CREATE TABLE employees(
+    -> employee_id INT PRIMARY KEY,
+    -> first_name VARCHAR(50),
+    -> last_name VARCHAR(50),
+    -> salary DECIMAL(10,2),
+    -> department VARCHAR(60),
+    -> birth_date DATE
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO employees VALUES
+    -> (1, 'John', 'Doe', 100000, 'Finance', 12/12/1988),
+    -> (2, 'Adit', 'Pathania', 500000, 'Computer Science', 08/18/2003),
+    -> (3, 'Alice', 'Hawk', 20000, 'Business', 04/23/1954);
+ERROR 1292 (22007): Incorrect date value: '0.000503018108651911' for column 'birth_date' at row 1
+mysql> INSERT INTO employees VALUES (1, 'John', 'Doe', 100000, 'Finance', '1988/12/12'), (2, 'Adit', 'Pathania', 500000, 'Computer Science', '2003/08/18'), (3,
+'Alice', 'Hawk', 20000, 'Business','1954/04/23');
+Query OK, 3 rows affected, 3 warnings (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 3
+
+mysql> SELECT * FROM employees;
++-------------+------------+-----------+-----------+------------------+------------+
+| employee_id | first_name | last_name | salary    | department       | birth_date |
++-------------+------------+-----------+-----------+------------------+------------+
+|           1 | John       | Doe       | 100000.00 | Finance          | 1988-12-12 |
+|           2 | Adit       | Pathania  | 500000.00 | Computer Science | 2003-08-18 |
+|           3 | Alice      | Hawk      |  20000.00 | Business         | 1954-04-23 |
++-------------+------------+-----------+-----------+------------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO employees VALUES
+    -> (4, 'Craig', 'Doe', 200000, 'Finance', '1988/12/12'),
+    -> (5, 'Neeraj', 'Pathania', 1000000, 'Computer Science', '2003/08/18'),
+    -> (6, 'Jane', 'Hawk', 40000, 'Business', '1954/04/23');
+Query OK, 3 rows affected, 3 warnings (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 3
+
+mysql> SELECT * FROM employees;
++-------------+------------+-----------+------------+------------------+------------+
+| employee_id | first_name | last_name | salary     | department       | birth_date |
++-------------+------------+-----------+------------+------------------+------------+
+|           1 | John       | Doe       |  100000.00 | Finance          | 1988-12-12 |
+|           2 | Adit       | Pathania  |  500000.00 | Computer Science | 2003-08-18 |
+|           3 | Alice      | Hawk      |   20000.00 | Business         | 1954-04-23 |
+|           4 | Craig      | Doe       |  200000.00 | Finance          | 1988-12-12 |
+|           5 | Neeraj     | Pathania  | 1000000.00 | Computer Science | 2003-08-18 |
+|           6 | Jane       | Hawk      |   40000.00 | Business         | 1954-04-23 |
++-------------+------------+-----------+------------+------------------+------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT employee_id, first_name, last_name FROM employees WHERE salary > 40000;
++-------------+------------+-----------+
+| employee_id | first_name | last_name |
++-------------+------------+-----------+
+|           1 | John       | Doe       |
+|           2 | Adit       | Pathania  |
+|           4 | Craig      | Doe       |
+|           5 | Neeraj     | Pathania  |
++-------------+------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM employees ORDER BY salary DESC;
++-------------+------------+-----------+------------+------------------+------------+
+| employee_id | first_name | last_name | salary     | department       | birth_date |
++-------------+------------+-----------+------------+------------------+------------+
+|           5 | Neeraj     | Pathania  | 1000000.00 | Computer Science | 2003-08-18 |
+|           2 | Adit       | Pathania  |  500000.00 | Computer Science | 2003-08-18 |
+|           4 | Craig      | Doe       |  200000.00 | Finance          | 1988-12-12 |
+|           1 | John       | Doe       |  100000.00 | Finance          | 1988-12-12 |
+|           6 | Jane       | Hawk      |   40000.00 | Business         | 1954-04-23 |
+|           3 | Alice      | Hawk      |   20000.00 | Business         | 1954-04-23 |
++-------------+------------+-----------+------------+------------------+------------+
+6 rows in set (0.01 sec)
+
+mysql> SELECT * FROM employees ORDER BY salary ASC;
++-------------+------------+-----------+------------+------------------+------------+
+| employee_id | first_name | last_name | salary     | department       | birth_date |
++-------------+------------+-----------+------------+------------------+------------+
+|           3 | Alice      | Hawk      |   20000.00 | Business         | 1954-04-23 |
+|           6 | Jane       | Hawk      |   40000.00 | Business         | 1954-04-23 |
+|           1 | John       | Doe       |  100000.00 | Finance          | 1988-12-12 |
+|           4 | Craig      | Doe       |  200000.00 | Finance          | 1988-12-12 |
+|           2 | Adit       | Pathania  |  500000.00 | Computer Science | 2003-08-18 |
+|           5 | Neeraj     | Pathania  | 1000000.00 | Computer Science | 2003-08-18 |
++-------------+------------+-----------+------------+------------------+------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM employees ORDER BY salary DESC;
++-------------+------------+-----------+------------+------------------+------------+
+| employee_id | first_name | last_name | salary     | department       | birth_date |
++-------------+------------+-----------+------------+------------------+------------+
+|           5 | Neeraj     | Pathania  | 1000000.00 | Computer Science | 2003-08-18 |
+|           2 | Adit       | Pathania  |  500000.00 | Computer Science | 2003-08-18 |
+|           4 | Craig      | Doe       |  200000.00 | Finance          | 1988-12-12 |
+|           1 | John       | Doe       |  100000.00 | Finance          | 1988-12-12 |
+|           6 | Jane       | Hawk      |   40000.00 | Business         | 1954-04-23 |
+|           3 | Alice      | Hawk      |   20000.00 | Business         | 1954-04-23 |
++-------------+------------+-----------+------------+------------------+------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT employee_id, first_name, last_name FROM employees WHERE salary > 40000
+    -> ORDER BY salary DESC;
++-------------+------------+-----------+
+| employee_id | first_name | last_name |
++-------------+------------+-----------+
+|           5 | Neeraj     | Pathania  |
+|           2 | Adit       | Pathania  |
+|           4 | Craig      | Doe       |
+|           1 | John       | Doe       |
++-------------+------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT employee_id, first_name, last_name, salary FROM employees WHERE salary >
+40000 
++-------------+------------+-----------+------------+
+| employee_id | first_name | last_name | salary     |
++-------------+------------+-----------+------------+
+|           5 | Neeraj     | Pathania  | 1000000.00 |
+|           2 | Adit       | Pathania  |  500000.00 |
+|           4 | Craig      | Doe       |  200000.00 |
+|           1 | John       | Doe       |  100000.00 |
++-------------+------------+-----------+------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO employees VALUES
+    -> (7, 'Myk', 'Mohit', 60000, 'Computer Science', '1999/01/01');
+Query OK, 1 row affected, 1 warning (0.02 sec)
+
+mysql> SELECT * FROM employees;
++-------------+------------+-----------+------------+------------------+------------+
+| employee_id | first_name | last_name | salary     | department       | birth_date |
++-------------+------------+-----------+------------+------------------+------------+
+|           1 | John       | Doe       |  100000.00 | Finance          | 1988-12-12 |
+|           2 | Adit       | Pathania  |  500000.00 | Computer Science | 2003-08-18 |
+|           3 | Alice      | Hawk      |   20000.00 | Business         | 1954-04-23 |
+|           4 | Craig      | Doe       |  200000.00 | Finance          | 1988-12-12 |
+|           5 | Neeraj     | Pathania  | 1000000.00 | Computer Science | 2003-08-18 |
+|           6 | Jane       | Hawk      |   40000.00 | Business         | 1954-04-23 |
+|           7 | Myk        | Mohit     |   60000.00 | Computer Science | 1999-01-01 |
++-------------+------------+-----------+------------+------------------+------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT employee_id, first_name, last_name FROM employees WHERE salary > 40000
+    -> department = 'Computer Science';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'department = 'Computer Science'' at line 2
+mysql> SELECT employee_id, first_name, last_name FROM employees WHERE salary > 40000, department = 'Computer Science';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', department = 'Computer Science'' at line 1
+mysql> SELECT employee_id, first_name, last_name FROM employees WHERE salary > 40000 and department = 'Computer Science';
++-------------+------------+-----------+
+| employee_id | first_name | last_name |
++-------------+------------+-----------+
+|           2 | Adit       | Pathania  |
+|           5 | Neeraj     | Pathania  |
+|           7 | Myk        | Mohit     |
++-------------+------------+-----------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT * FROM employees ORDER BY birth_date DESC;
++-------------+------------+-----------+------------+------------------+------------+
+| employee_id | first_name | last_name | salary     | department       | birth_date |
++-------------+------------+-----------+------------+------------------+------------+
+|           2 | Adit       | Pathania  |  500000.00 | Computer Science | 2003-08-18 |
+|           5 | Neeraj     | Pathania  | 1000000.00 | Computer Science | 2003-08-18 |
+|           7 | Myk        | Mohit     |   60000.00 | Computer Science | 1999-01-01 |
+|           1 | John       | Doe       |  100000.00 | Finance          | 1988-12-12 |
+|           4 | Craig      | Doe       |  200000.00 | Finance          | 1988-12-12 |
+|           3 | Alice      | Hawk      |   20000.00 | Business         | 1954-04-23 |
+|           6 | Jane       | Hawk      |   40000.00 | Business         | 1954-04-23 |
++-------------+------------+-----------+------------+------------------+------------+
+7 rows in set (0.00 sec)
+
+mysql> ALTER TABLE employees
+    -> UPDATE COLUMN department = department_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'UPDATE COLUMN department = department_id' at line 2
+mysql> ALTER TABLE employees
+    -> DROP COLUMN department;
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM employees;
++-------------+------------+-----------+------------+------------+
+| employee_id | first_name | last_name | salary     | birth_date |
++-------------+------------+-----------+------------+------------+
+|           1 | John       | Doe       |  100000.00 | 1988-12-12 |
+|           2 | Adit       | Pathania  |  500000.00 | 2003-08-18 |
+|           3 | Alice      | Hawk      |   20000.00 | 1954-04-23 |
+|           4 | Craig      | Doe       |  200000.00 | 1988-12-12 |
+|           5 | Neeraj     | Pathania  | 1000000.00 | 2003-08-18 |
+|           6 | Jane       | Hawk      |   40000.00 | 1954-04-23 |
+|           7 | Myk        | Mohit     |   60000.00 | 1999-01-01 |
++-------------+------------+-----------+------------+------------+
+7 rows in set (0.00 sec)
+
+mysql> ALTER TABLE employees
+    -> ADD COLUMN department_id INT;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> UPDATE employees
+    -> SET department_id = 1
+    -> WHERE employee_id = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employees SET department_id = 1 WHERE employee_id = 3;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employees SET department_id = 2 WHERE employee_id = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employees SET department_id = 2 WHERE employee_id = 4;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employees SET department_id = 2 WHERE employee_id = 7;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employees SET department_id = 3 WHERE employee_id = 5;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE employees SET department_id = 3 WHERE employee_id = 6;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM employees;
++-------------+------------+-----------+------------+------------+---------------+
+| employee_id | first_name | last_name | salary     | birth_date | department_id |
++-------------+------------+-----------+------------+------------+---------------+
+|           1 | John       | Doe       |  100000.00 | 1988-12-12 |             1 |
+|           2 | Adit       | Pathania  |  500000.00 | 2003-08-18 |             2 |
+|           3 | Alice      | Hawk      |   20000.00 | 1954-04-23 |             1 |
+|           4 | Craig      | Doe       |  200000.00 | 1988-12-12 |             2 |
+|           5 | Neeraj     | Pathania  | 1000000.00 | 2003-08-18 |             3 |
+|           6 | Jane       | Hawk      |   40000.00 | 1954-04-23 |             3 |
+|           7 | Myk        | Mohit     |   60000.00 | 1999-01-01 |             2 |
++-------------+------------+-----------+------------+------------+---------------+
+7 rows in set (0.00 sec)
+
+mysql> CREATE TABLE departments(
+    -> department_id INT PRIMARY KEY,
+    -> department_name VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO departments VALUES
+    -> (1, 'Finance'),
+    -> (2, 'Computer Science'),
+    -> (3, 'Business');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM departments;
++---------------+------------------+
+| department_id | department_name  |
++---------------+------------------+
+|             1 | Finance          |
+|             2 | Computer Science |
+|             3 | Business         |
++---------------+------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM employees;
++-------------+------------+-----------+------------+------------+---------------+
+| employee_id | first_name | last_name | salary     | birth_date | department_id |
++-------------+------------+-----------+------------+------------+---------------+
+|           1 | John       | Doe       |  100000.00 | 1988-12-12 |             1 |
+|           2 | Adit       | Pathania  |  500000.00 | 2003-08-18 |             2 |
+|           3 | Alice      | Hawk      |   20000.00 | 1954-04-23 |             1 |
+|           4 | Craig      | Doe       |  200000.00 | 1988-12-12 |             2 |
+|           5 | Neeraj     | Pathania  | 1000000.00 | 2003-08-18 |             3 |
+|           6 | Jane       | Hawk      |   40000.00 | 1954-04-23 |             3 |
+|           7 | Myk        | Mohit     |   60000.00 | 1999-01-01 |             2 |
++-------------+------------+-----------+------------+------------+---------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT employee_id, first_name, last_name, department_name  FROM employees, departments WHERE employees.department_id = departments.department_id;
++-------------+------------+-----------+------------------+
+| employee_id | first_name | last_name | department_name  |
++-------------+------------+-----------+------------------+
+|           1 | John       | Doe       | Finance          |
+|           2 | Adit       | Pathania  | Computer Science |
+|           3 | Alice      | Hawk      | Finance          |
+|           4 | Craig      | Doe       | Computer Science |
+|           5 | Neeraj     | Pathania  | Business         |
+|           6 | Jane       | Hawk      | Business         |
+|           7 | Myk        | Mohit     | Computer Science |
++-------------+------------+-----------+------------------+
+7 rows in set (0.01 sec)
+
+mysql> SELECT employee_id, first_name, last_name, department_name as Department FROM employees
++-------------+------------+-----------+------------------+
+| employee_id | first_name | last_name | Department       |
++-------------+------------+-----------+------------------+
+|           1 | John       | Doe       | Finance          |
+|           2 | Adit       | Pathania  | Computer Science |
+|           3 | Alice      | Hawk      | Finance          |
+|           4 | Craig      | Doe       | Computer Science |
+|           5 | Neeraj     | Pathania  | Business         |
+|           6 | Jane       | Hawk      | Business         |
+|           7 | Myk        | Mohit     | Computer Science |
++-------------+------------+-----------+------------------+
+7 rows in set (0.01 sec)
