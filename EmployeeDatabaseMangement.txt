@@ -1,0 +1,412 @@
+Microsoft Windows [Version 10.0.22621.3007]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\aditp>mysql --version
+mysql  Ver 8.0.36 for Win64 on x86_64 (MySQL Community Server - GPL)
+
+C:\Users\aditp>mysql -u root -p
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 15
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CHECK DATABASES;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DATABASES' at line 1
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE DATABASE employee_management;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE employee_management
+Database changed
+mysql> CREATE TABLE Departments(
+    -> department_id INT PRIMARY KEY,
+    -> department_name VARCHAR(50),
+    -> location VARCHAR(70)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE TABLE Employees(
+    -> employee_id INT PRIMARY KEY,
+    -> employee_name VARCHAR(50),
+    -> position VARCHAR(50),
+    -> department_id INT,
+    -> hire_date DATE,
+    -> salary INT
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO Departments VALUES
+    -> (1, 'Computer Science', 'Frisco'),
+    -> (2, 'Information Technology', 'Richardson'),
+    -> (3, 'Business', 'Plano');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Employees VALUES
+    -> (1, 'Adit', 'CEO', 1, 08/18/2010, 600000),
+    -> (2, 'Myk', 'Intern', 1, 08/12/2011, 60000),
+    -> (3, 'Bob', 'Director', 2, 12/12/2004, 300000),
+    -> (4, 'Alice', 'CTO', 3, 09/18/1995, 300000);
+ERROR 1292 (22007): Incorrect date value: '0.000221116638805970' for column 'hire_date' at row 1
+mysql> INSERT INTO Employees VALUES
+    -> (1, 'Adit', 'CEO', 1, '08/18/2010', 600000),
+    -> (2, 'Myk', 'Intern', 1, '08/12/2011', 60000),
+    -> (3, 'Bob', 'Director', 2, '12/12/2004', 300000),
+    -> (4, 'Alice', 'CTO', 3, '09/18/1995', 300000);
+ERROR 1292 (22007): Incorrect date value: '08/18/2010' for column 'hire_date' at row 1
+mysql> INSERT INTO Employees VALUES
+    -> (1, 'Adit', 'CEO', 1, '2010/08/18', 600000),
+    -> (2, 'Myk', 'Intern', 1, '2011/08/12', 60000),
+    -> (3, 'Bob', 'Director', 2, '2004/12/12', 300000),
+    -> (4, 'Alice', 'CTO', 3, '1995/09/18', 300000);
+Query OK, 4 rows affected, 4 warnings (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 4
+
+mysql> SELECT * FROM Employees;
++-------------+---------------+----------+---------------+------------+--------+
+| employee_id | employee_name | position | department_id | hire_date  | salary |
++-------------+---------------+----------+---------------+------------+--------+
+|           1 | Adit          | CEO      |             1 | 2010-08-18 | 600000 |
+|           2 | Myk           | Intern   |             1 | 2011-08-12 |  60000 |
+|           3 | Bob           | Director |             2 | 2004-12-12 | 300000 |
+|           4 | Alice         | CTO      |             3 | 1995-09-18 | 300000 |
++-------------+---------------+----------+---------------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Employees.department_id = Departments.department_id;
++------------------------+---------------+
+| department_name        | employee_name |
++------------------------+---------------+
+| Computer Science       | Adit          |
+| Computer Science       | Myk           |
+| Information Technology | Bob           |
+| Business               | Alice         |
++------------------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Employees.department_id = Departments.department_id and department_id = 1;
+ERROR 1052 (23000): Column 'department_id' in where clause is ambiguous
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Employees.department_id = Departments.department_id
+    -> department_id = 1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'department_id = 1' at line 2
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Employees.department_id = Departments.department_id
+    -> department_id = '1';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'department_id = '1'' at line 2
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Employees.department_id = Departments.department_id
+    -> department_name = 'Computer Science';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'department_name = 'Computer Science'' at line 2
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Employees.department_id = Departments.department_id
+    -> Departments.department_name = 'Computer Science';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Departments.department_name = 'Computer Science'' at line 2
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE department_name =
+'Computer Science';
++------------------+---------------+
+| department_name  | employee_name |
++------------------+---------------+
+| Computer Science | Adit          |
+| Computer Science | Myk           |
+| Computer Science | Bob           |
+| Computer Science | Alice         |
++------------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Departments
+    -> ;
++---------------+------------------------+------------+
+| department_id | department_name        | location   |
++---------------+------------------------+------------+
+|             1 | Computer Science       | Frisco     |
+|             2 | Information Technology | Richardson |
+|             3 | Business               | Plano      |
++---------------+------------------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Employees;
++-------------+---------------+----------+---------------+------------+--------+
+| employee_id | employee_name | position | department_id | hire_date  | salary |
++-------------+---------------+----------+---------------+------------+--------+
+|           1 | Adit          | CEO      |             1 | 2010-08-18 | 600000 |
+|           2 | Myk           | Intern   |             1 | 2011-08-12 |  60000 |
+|           3 | Bob           | Director |             2 | 2004-12-12 | 300000 |
+|           4 | Alice         | CTO      |             3 | 1995-09-18 | 300000 |
++-------------+---------------+----------+---------------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Employees.department_id = Departments.department_id
+    -> ;
++------------------------+---------------+
+| department_name        | employee_name |
++------------------------+---------------+
+| Computer Science       | Adit          |
+| Computer Science       | Myk           |
+| Information Technology | Bob           |
+| Business               | Alice         |
++------------------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Employees.department_id = 1;
++------------------------+---------------+
+| department_name        | employee_name |
++------------------------+---------------+
+| Computer Science       | Myk           |
+| Computer Science       | Adit          |
+| Information Technology | Myk           |
+| Information Technology | Adit          |
+| Business               | Myk           |
+| Business               | Adit          |
++------------------------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Departments.department_id = 1;
++------------------+---------------+
+| department_name  | employee_name |
++------------------+---------------+
+| Computer Science | Adit          |
+| Computer Science | Myk           |
+| Computer Science | Bob           |
+| Computer Science | Alice         |
++------------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT department_name, employee_name, department_id from Employees, Departments WHERE Departments.department_id = 1;
+ERROR 1052 (23000): Column 'department_id' in field list is ambiguous
+mysql> SELECT department_name, employee_name from Employees, Departments WHERE Departments.department_id = Employees.department_id AND Departments.department_id = 1;
++------------------+---------------+
+| department_name  | employee_name |
++------------------+---------------+
+| Computer Science | Adit          |
+| Computer Science | Myk           |
++------------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT employee_name FROM Employees WHERE hire_date = 2011;
+Empty set, 1 warning (0.00 sec)
+
+mysql> SELECT employee_name FROM Employees WHERE hire_date = 2011/X/X;
+ERROR 1054 (42S22): Unknown column 'X' in 'where clause'
+mysql> SELECT employee_name FROM Employees WHERE hire_date = 2011/;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> SELECT employee_name FROM Employees WHERE YEAR(hire_date) = 2011;
++---------------+
+| employee_name |
++---------------+
+| Myk           |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> UPDATE Employees
+    -> SET salary = 100000
+    -> WHERE employee_id = 2;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM Employees;
++-------------+---------------+----------+---------------+------------+--------+
+| employee_id | employee_name | position | department_id | hire_date  | salary |
++-------------+---------------+----------+---------------+------------+--------+
+|           1 | Adit          | CEO      |             1 | 2010-08-18 | 600000 |
+|           2 | Myk           | Intern   |             1 | 2011-08-12 | 100000 |
+|           3 | Bob           | Director |             2 | 2004-12-12 | 300000 |
+|           4 | Alice         | CTO      |             3 | 1995-09-18 | 300000 |
++-------------+---------------+----------+---------------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> DELETE FROM Employees WHERE employee_id = 3;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM Employees;
++-------------+---------------+----------+---------------+------------+--------+
+| employee_id | employee_name | position | department_id | hire_date  | salary |
++-------------+---------------+----------+---------------+------------+--------+
+|           1 | Adit          | CEO      |             1 | 2010-08-18 | 600000 |
+|           2 | Myk           | Intern   |             1 | 2011-08-12 | 100000 |
+|           4 | Alice         | CTO      |             3 | 1995-09-18 | 300000 |
++-------------+---------------+----------+---------------+------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Departments VALUES
+    -> (104, 'Human Resources', 'Midtown');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM Employee ORDER salary DESC;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'salary DESC' at line 1
+mysql> SELECT * FROM Employee WHERE ORDER salary ASC;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER salary ASC' at line 1
+mysql> SELECT * FROM Employee ORDER BY salary DSC;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DSC' at line 1
+mysql> SELECT * FROM Employee ORDER BY salary ASC;
+ERROR 1146 (42S02): Table 'employee_management.employee' doesn't exist
+mysql> SELECT * FROM Employee ORDER BY salary DESC;
+ERROR 1146 (42S02): Table 'employee_management.employee' doesn't exist
+mysql> SELECT * FROM employee_management ORDER BY salary DESC;
+ERROR 1146 (42S02): Table 'employee_management.employee_management' doesn't exist
+mysql> SELECT * FROM Employees ORDER BY salary DESC;
++-------------+---------------+----------+---------------+------------+--------+
+| employee_id | employee_name | position | department_id | hire_date  | salary |
++-------------+---------------+----------+---------------+------------+--------+
+|           1 | Adit          | CEO      |             1 | 2010-08-18 | 600000 |
+|           4 | Alice         | CTO      |             3 | 1995-09-18 | 300000 |
+|           2 | Myk           | Intern   |             1 | 2011-08-12 | 100000 |
++-------------+---------------+----------+---------------+------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Employees ORDER BY salary DESC LIMIT 1;
++-------------+---------------+----------+---------------+------------+--------+
+| employee_id | employee_name | position | department_id | hire_date  | salary |
++-------------+---------------+----------+---------------+------------+--------+
+|           1 | Adit          | CEO      |             1 | 2010-08-18 | 600000 |
++-------------+---------------+----------+---------------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> SELECT employee_name FROM Employees WHERE position ='CTO';
++---------------+
+| employee_name |
++---------------+
+| Alice         |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT employee_name, salary FROM Employees;
++---------------+--------+
+| employee_name | salary |
++---------------+--------+
+| Adit          | 600000 |
+| Myk           | 100000 |
+| Alice         | 300000 |
++---------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT employee_name, position, hire_date, salary, location FROM Departments, Employees WHERE Departments.department_id = Employees.department_id;
++---------------+----------+------------+--------+----------+
+| employee_name | position | hire_date  | salary | location |
++---------------+----------+------------+--------+----------+
+| Adit          | CEO      | 2010-08-18 | 600000 | Frisco   |
+| Myk           | Intern   | 2011-08-12 | 100000 | Frisco   |
+| Alice         | CTO      | 1995-09-18 | 300000 | Plano    |
++---------------+----------+------------+--------+----------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Customers (
+    ->   customer_id INT PRIMARY KEY,
+    ->   customer_name VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CREATE TABLE Orders (
+    ->   order_id INT PRIMARY KEY,
+    ->   order_date DATE,
+    ->   customer_id INT,
+    ->   FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO Customers VALUES
+    -> (1, 'Adit'),
+    -> (2, 'Myk'),
+    -> (3, 'John'),
+    -> (4, 'Nathan'),
+    -> (5, 'Bob');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Orders VALUES
+    -> (1, '2023/09/12', 1),
+    -> (2, '2023/10/12', 2),
+    -> (3, '2023/11/12', 3),
+    -> (4, '2023/12/12', 4),
+    -> (5, '2024/01/12', 5);
+Query OK, 5 rows affected, 5 warnings (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 5
+
+mysql> SELECT customer_name, order_id, order_date FROM Orders, Customers
+    -> JOIN Orders
+    -> ON Customers.customer_id = Orders.customer_id;
+ERROR 1066 (42000): Not unique table/alias: 'Orders'
+mysql> SELECT customer_name, order_id, order_date FROM Orders, Customers
+    -> INNER JOIN table2
+    -> ON Customers.customer_id = Orders.customer_id;
+ERROR 1146 (42S02): Table 'employee_management.table2' doesn't exist
+mysql> SELECT customer_name, order_id, order_date FROM Customers, Orders
+    -> INNER JOIN Orders,
+    -> ON Customers.customer_id = Orders.customer_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ON Customers.customer_id = Orders.customer_id' at line 3
+mysql> SELECT customer_name, order_id, order_date FROM Customers
+    -> JOIN Orders
+    -> ON Customers.customer_id = Orders.customer_id;
++---------------+----------+------------+
+| customer_name | order_id | order_date |
++---------------+----------+------------+
+| Adit          |        1 | 2023-09-12 |
+| Myk           |        2 | 2023-10-12 |
+| John          |        3 | 2023-11-12 |
+| Nathan        |        4 | 2023-12-12 |
+| Bob           |        5 | 2024-01-12 |
++---------------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO Customers VALUES
+    -> (6, 'Joe');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO Orders VALUES
+    -> (7, '2024/02/12', 7);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`employee_management`.`orders`, CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`))
+mysql> INSERT INTO Orders VALUES
+    -> (7, '2024/02/12');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO Orders VALUES
+    -> ^C
+mysql> SELECT customer_name FROM Customers
+    -> LEFT JOIN Orders
+    -> ON Customers.customer_id = Orders.customer_id;
++---------------+
+| customer_name |
++---------------+
+| Adit          |
+| Myk           |
+| John          |
+| Nathan        |
+| Bob           |
+| Joe           |
++---------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT customer_name, customer_id FROM Customers
+    -> LEFT JOIN Orders
+    -> ON Customers.customer_id = Orders.customer_id;
+ERROR 1052 (23000): Column 'customer_id' in field list is ambiguous
+mysql> SELECT customer_name, Orders.customer_id FROM Customers
+    -> LEFT JOIN Orders
+    -> ON Customers.customer_id = Orders.customer_id;
++---------------+-------------+
+| customer_name | customer_id |
++---------------+-------------+
+| Adit          |           1 |
+| Myk           |           2 |
+| John          |           3 |
+| Nathan        |           4 |
+| Bob           |           5 |
+| Joe           |        NULL |
++---------------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> ^A^C
+mysql>
